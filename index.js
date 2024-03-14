@@ -13,6 +13,10 @@ app.use("/product", products)
 const cart = require('./router/CartRoutes.js')
 app.use("/cart", cart)
 
+const image = require('./router/ImageRoutes.js')
+app.use("/image", image)
+app.use('/uploads', express.static('./uploads'))
+
 app.listen(8080, () => {
     console.log('App will Run on port 8080')
 })
