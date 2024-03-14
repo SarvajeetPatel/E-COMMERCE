@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const cart = require('./cart');
+const product = require('./product');
 module.exports = (sequelize, DataTypes) => {
   class cart_product extends Model {
     /**
@@ -14,7 +16,20 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   cart_product.init({
-    
+    CartId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: cart,
+        key:'id'
+      }
+    },
+    ProductId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: product,
+        key:'id'
+      }
+    }
   }, {
     sequelize,
     modelName: 'cart_product',

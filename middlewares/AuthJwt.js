@@ -2,12 +2,12 @@ var db = require('../models');
 var tokenTable = db.Token;
 
 async function AuthJwt(req, res, next) {
-    const AuthToken = req.headers;
+    const {authorization} = req.headers;
     const { id } = req.body;
 
     const data = await tokenTable.findOne({
         where: {
-            token: AuthToken,
+            token: authorization.slice(7),
             userId: id
         }
     });

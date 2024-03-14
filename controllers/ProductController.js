@@ -1,35 +1,51 @@
-var db = require('../models');
-var product = db.Product;
+const db = require('../models');
+const product = db.Product;
 
-var addProducts = async (req, res) => {
+const addProducts = async (req, res) => {
     const productData = req.body;
-    if (productData.length > 1) {
+    try {
         var data = await product.bulkCreate(productData)
-    } else {
-        var data = await product.create(productData)
+    } catch (error) {
+        console.log(error.message)
     }
-    res.json({ data: data })
+    res.json({ data })
 }
 
-var editProducts = async (req, res) => {
+const editProducts = async (req, res) => {
     const productData = req.body;
-    const data = await product.update(productData, { where: { id: req.params.id } })
-    res.json({ data: data })
+    try {
+        var data = await product.update(productData, { where: { id: req.params.id } })
+    } catch (error) {
+        console.log(error.message)
+    }
+    res.json({ data })
 }
 
-var getAllProducts = async (req, res) => {
-    const data = await product.findAll({})
-    res.json({ data: data })
+const getAllProducts = async (req, res) => {
+    try {
+        var data = await product.findAll({})
+    } catch (error) {
+        console.log(error.message)
+    }
+    res.json({ data })
 }
 
-var getProductByID = async (req, res) => {
-    const data = await product.findOne({ where: { id: req.params.id } })
-    res.json({ data: data })
+const getProductByID = async (req, res) => {
+    try {
+        var data = await product.findOne({ where: { id: req.params.id } })
+    } catch (error) {
+        console.log(error.message)
+    }
+    res.json({ data })
 }
 
-var deleteProduct = async (req, res) => {
-    const data = await product.destroy({ where: { id: req.params.id } })
-    res.json({ data: data })
+const deleteProduct = async (req, res) => {
+    try {
+        var data = await product.destroy({ where: { id: req.params.id } })
+    } catch (error) {
+        console.log(error.message)
+    }
+    res.json({ data })
 }
 
 module.exports = {
