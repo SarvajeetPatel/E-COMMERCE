@@ -5,7 +5,7 @@ const path = require("path")
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads');
+        cb(null, 'public/images');
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -30,5 +30,5 @@ const addImage = async (req, res) => {
     }
     res.json('images uploaded successfully!')
 }
-
+// addProductImages
 module.exports = { upload, addImage };
