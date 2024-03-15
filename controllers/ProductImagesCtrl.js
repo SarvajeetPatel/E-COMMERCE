@@ -18,9 +18,8 @@ const addImage = async (req, res) => {
     var data;
     try {
         req.files.map(async (url) => {
-            url.originalname
             data = await product_images.create({
-                url: url.originalname,
+                url: `/images/${Date.now() + path.extname(url.originalname)}`,
                 productImg_ID: req.body.productId
             })
         }

@@ -50,11 +50,11 @@ const getCartDetails = async (req, res) => {
 
 const deleteFromCart = async (req, res) => {
     try {
-        const data = await cart.destroy({ where: { id: req.params.id } })
+        var data = await cart.destroy({ where: { id: req.params.id } })
     } catch (error) {
         console.log(error.message)
     }
-    res.json({ data: data })
+    res.json({ data })
 }
 
 module.exports = {

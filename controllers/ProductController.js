@@ -48,10 +48,29 @@ const deleteProduct = async (req, res) => {
     res.json({ data })
 }
 
+const getUserProducts = async (req, res) => {
+    try {
+        const { userId, pagination, sort } = req.body;
+        const page = (pagination.limit * pagination.page) - pagination.limit
+        const data = await product.findAll({
+            where: {
+                id: userId,
+            },
+            order: [sort.column, sort.order],
+            limit: pagination.limit,
+            offset: page
+        })
+        res.json({ data })
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
     addProducts,
     getAllProducts,
     getProductByID,
+    getUserProducts,
     editProducts,
     deleteProduct
 }

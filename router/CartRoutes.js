@@ -6,6 +6,6 @@ const authJwt = require('../middlewares/AuthJwt.js');
 
 router.post('/add-to-cart', cartController.addToCart)
 router.get('/get-cartDetails', cartController.getCartDetails)
-router.delete('/delete-from-Cart', authJwt, cartController.deleteFromCart)
+router.delete('/delete-from-Cart/:id', authJwt, cartController.deleteFromCart)
 
 module.exports = router;
