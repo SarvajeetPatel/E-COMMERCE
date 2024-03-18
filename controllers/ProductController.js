@@ -18,10 +18,10 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage }).array('image', 10);
 
 const addProducts = async (req, res) => {
-    const { title, brand, category, price, currency, inStock, productId, userId } = req.body;
+    const { title, brand, category, price, currency, inStock, userId } = req.body;
     try {
         var imageData;
-        var data = await product.bulkCreate({
+        var data = await product.create({
             title: title,
             brand: brand,
             category: category,
@@ -30,35 +30,41 @@ const addProducts = async (req, res) => {
             inStock: inStock
         })
 
-        req.files.map(async (url) => {
-            imageData = await productImages.create({
-                url: `/images/${Date.now() + path.extname(url.originalname)}`,
-                productImg_ID: productId
+        if (req.files !== undefined) {
+            req.files.map(async (url) => {
+                imageData = await productImages.create({
+                    url: `/images/${Date.now() + path.extname(url.originalname)}`,
+                    productImg_ID: data.id
+                })
             })
-        })
+        }
+        res.json({ data, productImages: imageData })
 
-        await user_products.create({ ProductId: productId, user_ProID: userId })
+        await user_products.create({ ProductId: data.id, user_ProID: userId })
 
     } catch (error) {
         console.log(error.message)
     }
-    res.json({ data, productImages: imageData })
 }
 
 const editProducts = async (req, res) => {
     const { title, brand, category, price, currency, inStock, productId } = req.body;
     try {
-        var data = await product.update({
+        const values = {
             title: title,
             brand: brand,
             category: category,
             price: price,
             currency: currency,
             inStock: inStock,
+        }
+
+        var data = await product.update(values, {
             where: {
-                id: req.params.id
-            },
+                title: req.params.id
+            }
         })
+        console.log(req.body, "to erdit", req.params.id)
 
         var imageData;
         req.files.map(async (url) => {
@@ -87,9 +93,10 @@ const getAllProducts = async (req, res) => {
 }
 
 const getProductByID = async (req, res) => {
+    console.log(req.params.id, "id")
     try {
         var data = await product.findOne({
-            where: { id: req.params.id },
+            where: { title: req.params.id },
             include: [{
                 model: productImages, as: 'ProductImages'
             }]
@@ -135,7 +142,16 @@ const getUserProducts = async (req, res) => {
                 model: productImages, as: 'ProductImages'
             }]
         })
-        res.json({ data })
+
+        const totalRec = await product.findAndCountAll()
+        const pagination = {
+            "totalRecords": totalRec.count,
+            "totalPage": Math.ceil(totalRec.count / limit),
+            "currentPage": userData?.pagination?.page,
+            "recordFrom": page + 1,
+            "recordTo": page + limit,
+        }
+        res.json({ data, pagination, count: totalRec.count })
     } catch (error) {
         console.log(error.message)
     }

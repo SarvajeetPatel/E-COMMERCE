@@ -1,9 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fromData = require('express-form-data')
 const cors = require('cors')
 require('./models')
 const app = express()
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fromData.parse())
 app.use(cors())
 
 const users = require('./router/UserRoutes.js')
